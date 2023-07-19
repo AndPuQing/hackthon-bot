@@ -5,14 +5,14 @@
   "description": "A Probot app",
   "author": "PuQing",
   "license": "ISC",
-  "homepage": "https://github.com//",
+  "homepage": "https://github.com/AndPuQing/hackthon-bot",
   "keywords": [
     "probot",
     "github",
     "probot-app"
   ],
   "scripts": {
-    "start": "probot run ./index.js",
+    "start": "probot run ./app.js",
     "test": "jest"
   },
   "dependencies": {
