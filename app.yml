@@ -123,15 +123,12 @@ default_permissions:
   # Get notified of, and update, content references.
   # https://developer.github.com/v3/apps/permissions/
   # organization_administration: read
-# The name of the GitHub App. Defaults to the name specified in package.json
-# name: My Probot App
 
 # The homepage of your GitHub App.
-# url: https://example.com/
+url: https://github.com/AndPuQing/hackthon-bot
 
 # A description of the GitHub App.
 # description: A description of my awesome app
 
 # Set to true when your GitHub App is available to the public or false when it is only accessible to the owner of the app.
-# Default: true
-# public: false
+Default: true
