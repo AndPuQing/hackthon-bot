@@ -1,7 +1,7 @@
 {
   "name": "hackthon-bot",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "description": "A Probot app",
   "author": "PuQing",
   "license": "ISC",
@@ -16,7 +16,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "probot": "^12.2.4"
+    "probot": "^12.3.1"
   },
   "devDependencies": {
     "jest": "^29.0.0",
