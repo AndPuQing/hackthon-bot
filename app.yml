@@ -35,7 +35,7 @@ default_events:
 # - project_card
 # - project_column
 # - public
-# - pull_request
+  - pull_request
 # - pull_request_review
 # - pull_request_review_comment
 # - push
@@ -82,7 +82,7 @@ default_permissions:
 
   # Pull requests and related comments, assignees, labels, milestones, and merges.
   # https://developer.github.com/v3/apps/permissions/#permission-on-pull-requests
-  # pull_requests: read
+  pull_requests: read
 
   # Manage the post-receive hooks for a repository.
   # https://developer.github.com/v3/apps/permissions/#permission-on-repository-hooks
@@ -131,4 +131,4 @@ url: https://github.com/AndPuQing/hackthon-bot
 description: A GitHub App built with probot that automates issue management for hackthon.
 
 # Set to true when your GitHub App is available to the public or false when it is only accessible to the owner of the app.
-Default: true
+# Default: true

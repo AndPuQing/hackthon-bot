@@ -1,4 +1,4 @@
-module.exports = class MarkdownTable {
+class MarkdownTable {
     constructor(markdownText) {
         this.markdownText = markdownText;
         this.lines = markdownText.split('\n');
@@ -19,9 +19,13 @@ module.exports = class MarkdownTable {
         };
         const headerline = this.tableline;
         const headers = headerline[0].split("|").map(cell => cell.trim());
+        headers.shift();
+        headers.pop();
         table.headers = headers;
         this.tableline.forEach(rowline => {
             const cells = rowline.split("|").map(cell => cell.trim());
+            cells.shift();
+            cells.pop();
             table.rows.push(cells);
         });
         return table;
@@ -29,25 +33,14 @@ module.exports = class MarkdownTable {
 
     setClaim(id, claim, pr) {
         const row = this.table.rows.find(row => row[this.id_index] == id);
-        if (row) {
-            const original_claim = row[this.claim_index];
-            if (original_claim) {
-                row[this.claim_index] = `${original_claim}, @${claim}`;
-            }
-            else {
-                row[this.claim_index] = `@${claim}`;
-            }
-        } else {
-            //TODO: handle this
+        if (!row) {
+            throw new Error(`ID ${id} not found`);
+        }
+        if (!row[this.claim_index]?.includes(claim)) {
+            row[this.claim_index] = [row[this.claim_index], `@${claim}`].filter(Boolean).join(", ");
         }
         if (pr) {
-            const original_pr = row[this.pr_index];
-            if (original_pr) {
-                row[this.pr_index] = `${original_pr}, ${pr}`;
-            }
-            else {
-                row[this.pr_index] = `${pr}`;
-            }
+            row[this.pr_index] = [row[this.pr_index], pr].filter(Boolean).join(", ");
         }
     }
 
@@ -55,11 +48,61 @@ module.exports = class MarkdownTable {
         let i = 0;
         this.lines.forEach((line, index) => {
             if (line.startsWith("|")) {
-                this.lines[index] = this.table.rows[i].join("|");
+                this.lines[index] = `| ${this.table.rows[i].join(" | ")} |`
                 i++;
             }
         }
         );
         return this.lines.join("\n");
     }
+
+    matchID(pr_title) {
+        const id_regex = /No\.(\d+)/g;
+        const match = id_regex.exec(pr_title);
+        if (match) {
+            const id = match[1];
+            const row = this.table.rows.find(row => row[this.id_index] == id);
+            if (row) {
+                return id;
+            }
+        }
+        const len = this.table.headers.length;
+        for (let i = 0; i < len; i++) {
+            if (i == this.id_index || i == this.claim_index || i == this.pr_index) {
+                continue;
+            }
+            const row = this.table.rows.find(row => pr_title.includes(row[i]));
+            if (row) {
+                return row[this.id_index];
+            }
+        }
+        return null;
+    }
 }
+
+function _convertIssueIDToURL(id) {
+    return `https://github.com/{owner}/{repo}/issues/${id}`;
+}
+
+function getIssueURLFromText(text) {
+    const regex = /https:\/\/github.com\/(\w+)\/(\w+)\/issues\/(\d+)/g;
+    const matches = [];
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+        matches.push(match[0]);
+    }
+    const issue_regex = /#(\d+)/g;
+    while ((match = issue_regex.exec(text)) !== null) {
+        matches.push(_convertIssueIDToURL(match[1]));
+    }
+    if (matches.length > 0) {
+        return matches;
+    }
+    return null;
+}
+
+
+module.exports = {
+    MarkdownTable,
+    getIssueURLFromText,
+};
